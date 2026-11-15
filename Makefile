@@ -1,25 +1,34 @@
-CC=gcc
-CFLAGS=-g -Wall -Wextra -Iinclude
-LIBS=-lm
-TARGET=template_editor
+CC       = gcc
+RAYLIB   = $(shell brew --prefix raylib)
 
-SRC_DIR = src
-OBJ_DIR = build
-INC_DIR = include
+CFLAGS   = -g -std=c11 -Wall -Wextra -Iinclude -I$(RAYLIB)/include
+LDFLAGS  = -L$(RAYLIB)/lib
+LIBS     = -lraylib -lm \
+           -framework IOKit -framework Cocoa -framework OpenGL
 
-_DEPS = types.h
-_OBJS = main.o
+TARGET   = bitforge
+SRC_DIR  = src
+OBJ_DIR  = build
+INC_DIR  = include
 
-DEPS = $(patsubst %,$(INC_DIR)/%,$(_DEPS))
-OBJS = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
+_DEPS    = types.h
+_OBJS    = main.o
 
+DEPS     = $(patsubst %,$(INC_DIR)/%,$(_DEPS))
+OBJS     = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+.PHONY: all clean
+
+all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS) $(LIBS)
 
-.PHONY: clean
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(DEPS) | $(OBJ_DIR)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(OBJ_DIR):
+	mkdir -p $@
+
 clean:
 	$(RM) $(TARGET) $(OBJS)
