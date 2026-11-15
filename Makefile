@@ -1,10 +1,10 @@
 CC       = gcc
 RAYLIB   = $(shell brew --prefix raylib)
 
-CFLAGS   = -g -std=c11 -Wall -Wextra -Iinclude -I$(RAYLIB)/include
+CFLAGS   = -g -std=c11 -Wall -Wextra -I$(INC_DIR) -I$(RAYLIB)/include
 LDFLAGS  = -L$(RAYLIB)/lib
 LIBS     = -lraylib -lm \
-           -framework IOKit -framework Cocoa -framework OpenGL
+           -framework IOKit -framework Cocoa -framework OpenGL -framework CoreVideo
 
 TARGET   = bitforge
 SRC_DIR  = src
@@ -17,7 +17,7 @@ _OBJS    = main.o
 DEPS     = $(patsubst %,$(INC_DIR)/%,$(_DEPS))
 OBJS     = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 
-.PHONY: all clean
+.PHONY: all clean run
 
 all: $(TARGET)
 
@@ -29,6 +29,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(DEPS) | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	mkdir -p $@
+
+run: all
+	./$(TARGET)
 
 clean:
 	$(RM) $(TARGET) $(OBJS)
