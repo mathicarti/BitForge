@@ -11,8 +11,8 @@ SRC_DIR  = src
 OBJ_DIR  = build
 INC_DIR  = include
 
-_DEPS    = types.h
-_OBJS    = main.o
+_DEPS    = types.h storage.h bitmap.h
+_OBJS    = main.o storage.o bitmap.o
 
 DEPS     = $(patsubst %,$(INC_DIR)/%,$(_DEPS))
 OBJS     = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
@@ -31,7 +31,7 @@ $(OBJ_DIR):
 	mkdir -p $@
 
 run: all
-	./$(TARGET)
+	./$(TARGET) bin.bin
 
 clean:
 	$(RM) $(TARGET) $(OBJS)

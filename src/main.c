@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "types.h"
+#include "storage.h"
 #include "raylib.h"
 
 int main(int argc, char **argv)
@@ -20,12 +21,19 @@ int main(int argc, char **argv)
     // Get the filename from the program args
     if (argc != 2)
     {
-        printf("Please enter a filename %s/<binary_file_name.bin>\n", argv[0]);
+        printf("Please enter a filename %s <binary_file_name.bin>\n", argv[0]);
         exit(1);
     }
 
-    FILE *bin_fp = fopen(argv[1], "wrb");
+    FILE *binary_fp = fopen(argv[1], "w+b");
+    if (binary_fp == NULL)
+        exit(2);
 
+    Binary_file test_binary = init_binary_file(5, 16, 16);
+    if (test_binary.image_at == NULL)
+        exit(3);
+
+    // Dummy binary image
     uint8_t binary_image[][2] = {
         {0xFF, 0xFF},
         {0x80, 0x01},
@@ -45,30 +53,11 @@ int main(int argc, char **argv)
         {0xFF, 0xFF}
     };
     
-    Binary_file test_data = {
-        .identifier = {'B', 'F', 'B', 'F'},
-        .image_count = 5,
-        .image_width = 16,
-        .image_height = 16,
-    };
-
-    // Write header
-    fwrite(&(test_data.identifier), 4 * sizeof(uint8_t), 1, bin_fp);
-    fwrite(&(test_data.image_count), sizeof(uint16_t), 1, bin_fp);
-    fwrite(&(test_data.image_width), sizeof(uint16_t), 1, bin_fp);
-    fwrite(&(test_data.image_height), sizeof(uint16_t), 1, bin_fp);
-    
-    // Write image data
-    for (int i = 0; i < test_data.image_count; i++)
+    for (int i = 0; i < test_binary.image_count; i++)
     {
-        for (int row = 0; row < test_data.image_height; row++)
-        {
-            for (int col = 0; col < (test_data.image_width / BYTE); col++)
-            {
-                fwrite(&(binary_image[row][col]), sizeof(uint8_t), 1, bin_fp);
-            }
-        }
+        set_image_data_at_index(i, binary_image, test_binary);
     }
+    write_binary_file(test_binary, binary_fp);
     
     /*
     // Main program loop
@@ -86,6 +75,9 @@ int main(int argc, char **argv)
     }
     CloseWindow();
     */
+
+    free_binary_file(test_binary);
+    fclose(binary_fp);
 
     return 0;
 }
