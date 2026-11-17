@@ -36,8 +36,8 @@ typedef struct
 {
     uint8_t identifier[BF_IDENTIFIER_SIZE];
     uint8_t version;
-    uint8_t height;
     uint8_t width;
+    uint8_t height;
     uint8_t orientation;
     uint16_t count;
 } BF_header;
@@ -45,8 +45,8 @@ typedef struct
 // In memory representation of the custom sprites data
 typedef struct
 {
-    uint8_t height;
     uint8_t width;
+    uint8_t height;
     uint8_t orientation;
 
     uint16_t count; // Current sprite count in bank
@@ -60,12 +60,12 @@ typedef struct
 // Sizing an image in a sprite bank
 size_t bf_image_size(uint8_t width, uint8_t height, uint8_t orientation);
 // Locating a bit in a sprite bank
-BF_status bank_locate(const Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y, size_t *byte_offset, uint8_t *bit_offset);
+BF_status bank_locate(const Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y, size_t *byte_offset, uint8_t *bit);
 
 /* Sprite Bank Lifecycle */
 BF_status bank_init(Sprite_bank *bank, uint8_t width, uint8_t height, uint8_t orientation, uint16_t capacity);
-// Adds a sprite to an existing sprite bank (reallocs if needed)
-BF_status bank_add_image(Sprite_bank *bank, uint16_t *new_sprite);
+// Adds space for a sprite to an existing sprite bank (reallocs if needed) and gives its new sprite index
+BF_status bank_add_image(Sprite_bank *bank, uint16_t *new_index);
 void bank_free(Sprite_bank *bank);
 
 /* --- Sprite Bank pixel manipulation --- */
