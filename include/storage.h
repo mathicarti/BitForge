@@ -11,6 +11,9 @@
 #define ORIENTATION_HORIZONTAL 0
 #define ORIENTATION_VERTICAL 1
 
+#define PIXEL_ON 1
+#define PIXEL_OFF 0
+
 // Enum to classify errors
 typedef enum
 {
@@ -72,9 +75,9 @@ void bank_free(Sprite_bank *bank);
 // Gets the value of a target pixel
 BF_status bank_get_pixel(const Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y, uint8_t *out);
 // Sets a target pixel to white
-BF_status bank_set_pixel(Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y, uint8_t *out);
+BF_status bank_set_pixel(Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y);
 // Sets a target pixel to black
-BF_status bank_clear_pixel(Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y, uint8_t *out);
+BF_status bank_clear_pixel(Sprite_bank *bank, uint16_t sprite, uint8_t x, uint8_t y);
 
 /* --- File and sys I/O --- */
 // Saves a sprite bank to a target binary file

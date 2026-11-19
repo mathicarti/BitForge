@@ -26,9 +26,9 @@ int main(int argc, char **argv)
         0x7F, 0x7F, 0x09, 0x09, 0x01, 0x01, 0x00, 0x00
     };
 
-    uint8_t new_index = 0;
+    uint16_t new_index = 0;
     Sprite_bank sprite_bank = {0};
-    bank_init(&sprite_bank, 8, 8, ORIENTATION_HORIZONTAL, 1);
+    bank_init(&sprite_bank, 8, 16, ORIENTATION_VERTICAL, 1);
     
     bank_add_image(&sprite_bank, &new_index);
     printf("%d\n", new_index);
